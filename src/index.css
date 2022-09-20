@@ -9,7 +9,7 @@
 
 .navul{
   display: flex;
-  height: 50px;
+  height: 70px;
   /* justify-items: center; */
   align-items: center;
 }
@@ -23,8 +23,9 @@
 
 .navb li a{
   text-decoration: none;
+  font-size: 1.2rem;
   color: rgb(3, 0, 0);
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .navb li a:hover{
@@ -34,9 +35,10 @@
 }
 
 #title{
+  font-size: 1.2rem;
   margin-left: 10px;
   margin-right: 25px;
   font-family: 'Open Sans', sans-serif;
-  font-weight: 1000;
+  font-weight: 1200;
   color: red;
 }

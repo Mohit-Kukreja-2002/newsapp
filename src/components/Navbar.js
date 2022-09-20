@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import '../index.css';
+import { Link } from 'react-router-dom';
 
 // using ==> rce
 export class Navbar extends Component {
@@ -8,9 +9,15 @@ export class Navbar extends Component {
       <>
       <nav className='navb'>
         <ul className='navul'>
-            <li> <a href="/" id='title'>NewzMonkey</a></li>
-            <li> <a href="/">Home</a></li>
-            <li> <a href="/">About</a></li>
+            <li> <Link to="/home" id='title'>NewzMonkey</Link></li>
+            <li> <Link to="/home">Home</Link></li>
+            <li> <Link to="/general">General</Link></li>
+            <li> <Link to="/sports">Sports</Link></li>
+            <li> <Link to="/business">Business</Link></li>
+            <li> <Link to="/technology">Technology</Link></li>
+            <li> <Link to="/science">Science</Link></li>
+            <li> <Link to="/health">Health</Link></li>
+            <li> <Link to="/entertainment">Entertainment</Link></li>
         </ul>
       </nav>
       </>
