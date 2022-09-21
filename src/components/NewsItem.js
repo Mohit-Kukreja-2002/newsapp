@@ -7,9 +7,11 @@ export class NewsItem extends Component {
       <div className='my-3'>
         <div className="card">
           <img src={src?src:"https://t3.ftcdn.net/jpg/03/60/44/00/240_F_360440053_fwHrYjqYg45hD1qpqyllKce3T16d5Bdb.jpg"} className="card-img-top" alt="..." />
+
           <div className="card-body">
           
-          <span class="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style={{left: '85%', zIndex: '1' ,fontSize: '0.9rem'}}>{name}</span>
+            <span className="position-absolute top-0 translate-middle badge rounded-pill bg-danger" style={{left: '90%', zIndex: '1' ,fontSize: '0.9rem'}}>{name}</span>
+
             <h5 className="card-title">{title}</h5>
             <p className="card-text">{description}</p>
             <div className="card-footer">

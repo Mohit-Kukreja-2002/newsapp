@@ -26,6 +26,21 @@ export class News extends Component {
       stop: false
     }
   }
+  
+  capitalizeFirstLetter=(string)=>{
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+
+  async updateNews(){
+    this.setState({loading: true})
+    document.title=`${this.capitalizeFirstLetter(this.props.category)} - NewzMonkey`
+    let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=ac796d46c6ea4907bfffcbaa2e170446&page=${this.state.page}&pageSize=${this.props.pagesize}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    console.log(parsedData);
+    this.setState({articles: parsedData.articles, totalResults: parsedData.totalResults});
+    this.setState({loading: false})
+  }
 
   HandleNextClick = async() => {
     // console.log(this.state.page);
@@ -33,13 +48,8 @@ export class News extends Component {
       // console.log(this.state.stop);
     }
     else{
-      let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=ac796d46c6ea4907bfffcbaa2e170446&page=${this.state.page + 1}&pageSize=${this.props.pagesize}`;
-      this.setState({loading: true})
-      let data = await fetch(url);
-      let parsedData = await data.json();
-      console.log(parsedData);
-      this.setState({articles: parsedData.articles, loading: false});
       this.state.page+=1;
+      this.updateNews();
       if(this.state.page + 1 >Math.ceil(this.state.totalResults/this.props.pagesize)){
         this.state.stop=true;
       }
@@ -47,32 +57,20 @@ export class News extends Component {
 
   }
 
+
   HandlePrevClick = async()=>{
     this.state.page-=1;
-    // console.log(this.state.page);
-    this.setState({loading: true})
-    let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=ac796d46c6ea4907bfffcbaa2e170446&page=${this.state.page}&pageSize=${this.props.pagesize}`;
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    console.log(parsedData);
-    this.setState({articles: parsedData.articles, loading: false});
+    this.updateNews();
   }
   
   async componentDidMount(){
-    this.setState({loading: true})
-    let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=ac796d46c6ea4907bfffcbaa2e170446&page=1&pageSize=${this.props.pagesize}`;
-    let data = await fetch(url);
-    let parsedData = await data.json();
-    console.log(parsedData);
-    this.setState({articles: parsedData.articles, totalResults: parsedData.totalResults});
-    this.setState({loading: false})
-
+    this.updateNews();
   }
 
   render() {
     return (
       <div className="container my-3">
-        <h1 className="text-center text-info my-3 my-3">TOP NEWS</h1>
+        <h1 className="text-center text-info my-3 my-3">Top {this.capitalizeFirstLetter(this.props.category)} News</h1>
         {this.state.loading && <Spinner/>}
         
         <div className="row">
