@@ -2,10 +2,11 @@ import React, { Component } from 'react'
 import NewsItem from './NewsItem'
 import Spinner from './Spinner';
 import PropTypes from 'prop-types'
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 export class News extends Component {
   static defaultProps={
-    country: "in",
+    country: 'in',
     pagesize: 6,
     category: 'general'
   }
@@ -20,7 +21,8 @@ export class News extends Component {
     super();
     this.state={
       articles: [],
-      loading: false,
+      // loading: false,
+      loading: true,
       page: 1,
       totalResults: 0,
       stop: false
@@ -32,14 +34,18 @@ export class News extends Component {
   }
 
   async updateNews(){
+    this.props.setProgress(10);
     this.setState({loading: true})
     document.title=`${this.capitalizeFirstLetter(this.props.category)} - NewzMonkey`
-    let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=ac796d46c6ea4907bfffcbaa2e170446&page=${this.state.page}&pageSize=${this.props.pagesize}`;
+    let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apikey}&page=${this.state.page}&pageSize=${this.props.pagesize}`;
     let data = await fetch(url);
+    this.props.setProgress(25);
     let parsedData = await data.json();
     console.log(parsedData);
+    this.props.setProgress(50);
     this.setState({articles: parsedData.articles, totalResults: parsedData.totalResults});
     this.setState({loading: false})
+    this.props.setProgress(100);
   }
 
   HandleNextClick = async() => {
@@ -57,7 +63,6 @@ export class News extends Component {
 
   }
 
-
   HandlePrevClick = async()=>{
     this.state.page-=1;
     this.updateNews();
@@ -67,25 +72,51 @@ export class News extends Component {
     this.updateNews();
   }
 
+  fetchMoreData=async()=>{
+    this.state.page+=1;
+    // this.setState({loading: true})
+    document.title=`${this.capitalizeFirstLetter(this.props.category)} - NewzMonkey`
+    let url=`https://newsapi.org/v2/top-headlines?country=${this.props.country}&category=${this.props.category}&apiKey=${this.props.apikey}&page=${this.state.page}&pageSize=${this.props.pagesize}`;
+    let data = await fetch(url);
+    let parsedData = await data.json();
+    console.log(parsedData);
+    this.setState({articles: this.state.articles.concat(parsedData.articles), 
+      totalResults: parsedData.totalResults});
+    this.setState({loading: false})
+  }
+
   render() {
     return (
-      <div className="container my-3">
+      <>
         <h1 className="text-center text-info my-3 my-3">Top {this.capitalizeFirstLetter(this.props.category)} News</h1>
         {this.state.loading && <Spinner/>}
         
+        <InfiniteScroll
+          next={this.fetchMoreData}
+          hasMore={this.state.articles.length!==this.state.totalResults}
+          dataLength={this.state.articles.length}
+          loader={<Spinner/>}>
+        
+        <div className="container my-3">
+
         <div className="row">
-          {!this.state.loading && this.state.articles.map((element)=>{
+          {//!this.state.loading && 
+          this.state.articles.map((element)=>{
             return <div className="col-md-4" key={element.url}>
               <NewsItem title={element.title} description={element.description} src={element.urlToImage} newsUrl={element.url} author={element.author} date={element.publishedAt} name={element.source.name} />
             </div>
           })}
         </div>
+          </div>
 
-        <div className='container d-flex justify-content-between'>
+        </InfiniteScroll>
+        {/* <div className='container d-flex justify-content-between'>
           <button disabled={this.state.page<=1}type="button" onClick={this.HandlePrevClick} className="btn btn-dark">&larr; Prev</button>
           <button disabled={this.state.stop} type="button" onClick={this.HandleNextClick} className="btn btn-dark">Next &rarr;</button>
-        </div>
-      </div>
+        </div> */}
+
+
+      </>
       
     )
   }
