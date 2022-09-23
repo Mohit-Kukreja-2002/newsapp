@@ -4,7 +4,12 @@
 }
 .navb{
   /* display: flex; */
+  overflow: hidden;
+  z-index: 1;
   background-color: beige;
+  position: fixed;
+  top: 0; 
+  width: 100%; 
 }
 
 .navul{
@@ -18,7 +23,7 @@
   font-family: 'Open Sans', sans-serif;
   list-style: none;
   padding: 0px 20px 0px 0px;
-  /* margin: 10px 5px 0px 5px; */
+  margin: 10px 0px 0px 0px;
 }
 
 .navb li a{
